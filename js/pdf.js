@@ -200,8 +200,10 @@ async function generatePDF(data) {
     const inspectionDateStr = data.inspectionDate ? formatDate(data.inspectionDate) : '';
     // Filter out invalid time formats (like Excel serial dates "1899/12/30...")
     let inspectionTimeStr = '';
+    console.log('DEBUG inspectionTime raw:', data.inspectionTime, 'type:', typeof data.inspectionTime);
     if (data.inspectionTime) {
         const timeVal = String(data.inspectionTime);
+        console.log('DEBUG timeVal:', timeVal);
         // Check for valid time formats: "9時30分", "9時", "10:30" etc.
         // Exclude Excel serial dates like "1899/12/30..." or "2026/01/09..."
         const isExcelDate = /^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}/.test(timeVal);
