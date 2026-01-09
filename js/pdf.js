@@ -4,7 +4,8 @@
  */
 
 // Load Japanese font (TTF format required for jsPDF)
-const FONT_URL = 'https://cdn.jsdelivr.net/gh/nicholasadamou/japanese-font@main/fonts/NotoSansJP-Regular.ttf';
+// Using IPAex Gothic font from jsDelivr CDN
+const FONT_URL = 'https://cdn.jsdelivr.net/gh/nicolo-ribaudo/noto-fonts-subset@v1/NotoSansJP-Regular.ttf';
 
 let fontLoaded = false;
 let fontBase64 = null;
