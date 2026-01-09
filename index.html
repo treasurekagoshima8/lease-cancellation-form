@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>賃貸借契約解約申込書</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>賃貸借契約解約申込書</h1>
+
+        <form id="cancellation-form">
+            <!-- 貸主情報 -->
+            <section class="form-section">
+                <h2>貸主情報</h2>
+                <div class="form-group">
+                    <label for="landlord-address">貸主住所 <span class="required">*</span></label>
+                    <input type="text" id="landlord-address" name="landlordAddress" required>
+                </div>
+                <div class="form-group">
+                    <label for="landlord-name">貸主氏名 <span class="required">*</span></label>
+                    <input type="text" id="landlord-name" name="landlordName" required>
+                </div>
+            </section>
+
+            <!-- 借主情報 -->
+            <section class="form-section">
+                <h2>借主情報</h2>
+                <div class="form-group">
+                    <label for="tenant-address">借主住所 <span class="required">*</span></label>
+                    <input type="text" id="tenant-address" name="tenantAddress" required>
+                </div>
+                <div class="form-group">
+                    <label for="tenant-name">借主氏名 <span class="required">*</span></label>
+                    <input type="text" id="tenant-name" name="tenantName" required>
+                </div>
+            </section>
+
+            <!-- 解約申込物件 -->
+            <section class="form-section">
+                <h2>(1) 解約申込物件</h2>
+                <div class="form-group">
+                    <label for="property-name">物件名 <span class="required">*</span></label>
+                    <input type="text" id="property-name" name="propertyName" required>
+                </div>
+                <div class="form-group">
+                    <label for="property-address">所在地 <span class="required">*</span></label>
+                    <input type="text" id="property-address" name="propertyAddress" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="room-number">部屋番号</label>
+                        <input type="text" id="room-number" name="roomNumber">
+                    </div>
+                    <div class="form-group half">
+                        <label for="parking-number">駐車番号</label>
+                        <input type="text" id="parking-number" name="parkingNumber">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="contractor-name">契約者氏名 <span class="required">*</span></label>
+                    <input type="text" id="contractor-name" name="contractorName" required>
+                </div>
+                <div class="form-group">
+                    <label for="application-date">解約申込日 <span class="required">*</span></label>
+                    <input type="date" id="application-date" name="applicationDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="cancellation-date">解約希望日 <span class="required">*</span></label>
+                    <input type="date" id="cancellation-date" name="cancellationDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="inspection-date">立会希望日</label>
+                    <input type="date" id="inspection-date" name="inspectionDate">
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="inspection-hour">立会希望時間</label>
+                        <select id="inspection-hour" name="inspectionHour">
+                            <option value="">--</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                        </select>
+                        <span>時</span>
+                    </div>
+                    <div class="form-group half">
+                        <label for="inspection-minute">分</label>
+                        <select id="inspection-minute" name="inspectionMinute">
+                            <option value="">--</option>
+                            <option value="00">00</option>
+                            <option value="30">30</option>
+                        </select>
+                        <span>分</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>解約事由 <span class="required">*</span></label>
+                    <div class="radio-group" id="cancel-reason-group">
+                        <label class="radio-label">
+                            <input type="radio" name="cancelReason" value="帰省" required>
+                            <span>帰省</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="cancelReason" value="住替">
+                            <span>住替</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="cancelReason" value="転勤">
+                            <span>転勤</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="cancelReason" value="卒業">
+                            <span>卒業</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="cancelReason" value="その他">
+                            <span>その他</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group" id="other-reason-group" style="display: none;">
+                    <label for="other-reason">その他の理由</label>
+                    <input type="text" id="other-reason" name="otherReason">
+                </div>
+                <div class="form-group">
+                    <label for="remarks">備考</label>
+                    <textarea id="remarks" name="remarks" rows="3"></textarea>
+                </div>
+            </section>
+
+            <!-- 精算金振込み口座 -->
+            <section class="form-section">
+                <h2>(2) 精算金振込み口座</h2>
+                <p class="note">※時期により1ヶ月程度掛かる場合がございます。</p>
+                <div class="form-group">
+                    <label for="bank-name">金融機関名 <span class="required">*</span></label>
+                    <input type="text" id="bank-name" name="bankName" required>
+                </div>
+                <div class="form-group">
+                    <label>金融機関種別 <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="bankType" value="銀行" required>
+                            <span>銀行</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="bankType" value="信用金庫">
+                            <span>信用金庫</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="bankType" value="信用組合">
+                            <span>信用組合</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="branch-name">支店名 <span class="required">*</span></label>
+                    <input type="text" id="branch-name" name="branchName" required>
+                </div>
+                <div class="form-group">
+                    <label>口座種別 <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="accountType" value="普通" required>
+                            <span>普通</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="accountType" value="当座">
+                            <span>当座</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="account-number">口座番号 <span class="required">*</span></label>
+                    <input type="text" id="account-number" name="accountNumber" required pattern="[0-9]*" inputmode="numeric" maxlength="8">
+                </div>
+                <div class="form-group">
+                    <label for="account-holder-kana">口座名義（カタカナ） <span class="required">*</span></label>
+                    <input type="text" id="account-holder-kana" name="accountHolderKana" required>
+                </div>
+            </section>
+
+            <!-- 転居先住所 -->
+            <section class="form-section">
+                <h2>(3) 転居先ご住所（精算書送付先）</h2>
+                <div class="form-group">
+                    <label for="new-postal-code">郵便番号</label>
+                    <input type="text" id="new-postal-code" name="newPostalCode" placeholder="000-0000" maxlength="8">
+                </div>
+                <div class="form-group">
+                    <label for="new-address">住所 <span class="required">*</span></label>
+                    <textarea id="new-address" name="newAddress" rows="2" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="recipient-name">送付先氏名</label>
+                    <input type="text" id="recipient-name" name="recipientName">
+                    <p class="hint">※契約者名と違う場合のみ入力</p>
+                </div>
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label for="phone-number">電話番号</label>
+                        <input type="tel" id="phone-number" name="phoneNumber">
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="phone-type">種別</label>
+                        <select id="phone-type" name="phoneType">
+                            <option value="自宅">自宅</option>
+                            <option value="実家">実家</option>
+                            <option value="会社">会社</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" id="phone-other-group" style="display: none;">
+                    <label for="phone-other">電話種別（その他）</label>
+                    <input type="text" id="phone-other" name="phoneOther">
+                </div>
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label for="mobile-number">携帯電話</label>
+                        <input type="tel" id="mobile-number" name="mobileNumber">
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="mobile-owner">所有者</label>
+                        <select id="mobile-owner" name="mobileOwner">
+                            <option value="本人">本人</option>
+                            <option value="主人">主人</option>
+                            <option value="妻">妻</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" id="mobile-other-group" style="display: none;">
+                    <label for="mobile-other">所有者（その他）</label>
+                    <input type="text" id="mobile-other" name="mobileOther">
+                </div>
+            </section>
+
+            <!-- 注意事項 -->
+            <section class="form-section notice-section">
+                <h2>解約時の注意事項</h2>
+                <ol>
+                    <li>退去立会日までに公共料金の精算、新聞・電話等の停止手続きをお願い致します。公共料金等未精算分がありますと敷金の返却が遅れる原因となります。</li>
+                    <li>荷物やゴミ等残置物がある場合はその処分費用を請求させていただくことになりますのでご注意下さい。</li>
+                </ol>
+            </section>
+
+            <!-- 送信ボタン -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="submit-btn">申込を送信</button>
+                <button type="button" class="btn btn-secondary" id="pdf-btn">PDFをダウンロード</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>送信中...</p>
+    </div>
+
+    <!-- Success modal -->
+    <div id="success-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>送信完了</h3>
+            <p>解約申込を受け付けました。</p>
+            <button type="button" class="btn btn-primary" id="close-modal">閉じる</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/pdf.js"></script>
+    <script src="js/form.js"></script>
+</body>
+</html>

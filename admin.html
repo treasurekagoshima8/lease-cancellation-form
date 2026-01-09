@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理者設定 - 賃貸借契約解約申込書</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-container">
+        <h1>管理者ログイン</h1>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="password">パスワード</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div id="login-error" class="error-message" style="display: none;"></div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">ログイン</button>
+        </form>
+    </div>
+
+    <!-- Admin Screen -->
+    <div id="admin-screen" class="admin-container" style="display: none;">
+        <div class="admin-header">
+            <h1>管理者画面</h1>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <a href="index.html" target="_blank" class="btn btn-secondary">申込フォームを開く</a>
+                <button type="button" class="btn btn-secondary logout-btn" id="logout-btn">ログアウト</button>
+            </div>
+        </div>
+
+        <!-- Submissions List (Full Width) -->
+        <section class="form-section" style="margin-bottom: 32px;">
+            <h2>申込一覧</h2>
+            <p class="note">スプレッドシートに保存された申込データを表示します。PDFをダウンロードできます。</p>
+            <div id="submissions-list" class="submissions-list">
+                <p class="loading-text">読み込み中...</p>
+            </div>
+            <button type="button" class="btn btn-secondary" id="refresh-submissions" style="margin-top: 12px;">更新</button>
+        </section>
+
+        <form id="settings-form">
+            <div class="admin-grid">
+                <!-- Field Visibility -->
+                <section class="form-section">
+                    <h2>入力項目の表示/非表示</h2>
+                    <p class="note">チェックを外すと、その項目がフォームに表示されなくなります。</p>
+
+                    <div class="settings-list settings-grid" id="field-visibility-list">
+                        <div class="setting-item">
+                            <span class="setting-label">部屋番号</span>
+                            <label class="toggle">
+                                <input type="checkbox" name="field-room-number" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label">駐車番号</span>
+                            <label class="toggle">
+                                <input type="checkbox" name="field-parking-number" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label">立会希望日</span>
+                            <label class="toggle">
+                                <input type="checkbox" name="field-inspection-date" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label">立会希望時間</span>
+                            <label class="toggle">
+                                <input type="checkbox" name="field-inspection-hour" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label">備考</span>
+                            <label class="toggle">
+                                <input type="checkbox" name="field-remarks" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label">送付先氏名</span>
+                            <label class="toggle">
+                                <input type="checkbox" name="field-recipient-name" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label">電話番号</span>
+                            <label class="toggle">
+                                <input type="checkbox" name="field-phone-number" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label">携帯電話</span>
+                            <label class="toggle">
+                                <input type="checkbox" name="field-mobile-number" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Cancel Reasons -->
+                <section class="form-section">
+                    <h2>解約事由の選択肢</h2>
+                    <p class="note">入居者が選択できる解約事由を編集できます。</p>
+
+                    <div class="editable-list" id="cancel-reasons-list">
+                        <!-- Items will be added dynamically -->
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-add" id="add-cancel-reason">+ 追加</button>
+                </section>
+
+                <!-- Phone Types -->
+                <section class="form-section">
+                    <h2>電話種別の選択肢</h2>
+
+                    <div class="editable-list" id="phone-types-list">
+                        <!-- Items will be added dynamically -->
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-add" id="add-phone-type">+ 追加</button>
+                </section>
+
+                <!-- Mobile Owners -->
+                <section class="form-section">
+                    <h2>携帯所有者の選択肢</h2>
+
+                    <div class="editable-list" id="mobile-owners-list">
+                        <!-- Items will be added dynamically -->
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-add" id="add-mobile-owner">+ 追加</button>
+                </section>
+
+                <!-- Save Button (Full Width) -->
+                <div class="form-actions admin-full-width" style="border-top: none; padding-top: 0;">
+                    <button type="submit" class="btn btn-primary" id="save-settings-btn" style="max-width: 300px;">設定を保存</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Password Change -->
+        <section class="form-section" style="margin-top: 48px; padding-top: 24px; border-top: 2px solid #e0e0e0; max-width: 400px;">
+            <h2>パスワード変更</h2>
+
+            <form id="password-form">
+                <div class="form-group">
+                    <label for="current-password">現在のパスワード</label>
+                    <input type="password" id="current-password" name="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="new-password">新しいパスワード</label>
+                    <input type="password" id="new-password" name="newPassword" required minlength="4">
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">新しいパスワード（確認）</label>
+                    <input type="password" id="confirm-password" name="confirmPassword" required>
+                </div>
+                <div id="password-error" class="error-message" style="display: none;"></div>
+                <button type="submit" class="btn btn-secondary" style="margin-top: 16px;">パスワードを変更</button>
+            </form>
+        </section>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>処理中...</p>
+    </div>
+
+    <!-- Success modal -->
+    <div id="success-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>保存完了</h3>
+            <p id="success-message">設定を保存しました。</p>
+            <button type="button" class="btn btn-primary" id="close-modal">閉じる</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/pdf.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
