@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingOverlay = document.getElementById('loading-overlay');
     const successModal = document.getElementById('success-modal');
     const closeModalBtn = document.getElementById('close-modal');
+    const modalPdfBtn = document.getElementById('modal-pdf-btn');
+
+    // Store submitted data for PDF generation after submit
+    let submittedFormData = null;
 
     // Set default date to today
     const today = new Date().toISOString().split('T')[0];
@@ -57,6 +61,9 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             await submitToSpreadsheet(formData);
 
+            // Store submitted data for PDF generation
+            submittedFormData = formData;
+
             // Hide loading, show success
             loadingOverlay.style.display = 'none';
             successModal.style.display = 'flex';
@@ -79,11 +86,19 @@ document.addEventListener('DOMContentLoaded', function() {
         generatePDF(formData);
     });
 
+    // PDF download from modal (using submitted data)
+    modalPdfBtn.addEventListener('click', function() {
+        if (submittedFormData) {
+            generatePDF(submittedFormData);
+        }
+    });
+
     // Close modal
     closeModalBtn.addEventListener('click', function() {
         successModal.style.display = 'none';
         form.reset();
         document.getElementById('application-date').value = today;
+        submittedFormData = null;
     });
 
     // Close modal on backdrop click
@@ -92,6 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
             successModal.style.display = 'none';
             form.reset();
             document.getElementById('application-date').value = today;
+            submittedFormData = null;
         }
     });
 
