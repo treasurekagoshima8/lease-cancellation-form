@@ -101,16 +101,15 @@ async function verifyPassword(password) {
     }
 
     try {
-        // Use POST for security (avoid password in URL)
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'verifyPassword',
-                password: password
-            })
+        // Use GET with encoded parameters to avoid CORS preflight
+        const params = new URLSearchParams({
+            action: 'verifyPassword',
+            password: password
+        });
+
+        const response = await fetch(`${API_URL}?${params.toString()}`, {
+            method: 'GET',
+            mode: 'cors'
         });
 
         if (!response.ok) {
@@ -161,16 +160,15 @@ async function getSubmissions(password) {
     }
 
     try {
-        // Use POST with password for authentication
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'getSubmissions',
-                password: password
-            })
+        // Use GET with encoded parameters to avoid CORS preflight
+        const params = new URLSearchParams({
+            action: 'getSubmissions',
+            password: password
+        });
+
+        const response = await fetch(`${API_URL}?${params.toString()}`, {
+            method: 'GET',
+            mode: 'cors'
         });
 
         if (!response.ok) {

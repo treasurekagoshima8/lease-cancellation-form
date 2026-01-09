@@ -111,6 +111,17 @@ function doGet(e) {
     case 'getSettings':
       result = getSettings();
       break;
+    case 'verifyPassword':
+      result = { valid: verifyPassword(e.parameter.password) };
+      break;
+    case 'getSubmissions':
+      // Require authentication for submissions
+      if (!verifyPassword(e.parameter.password)) {
+        result = { error: 'Authentication required' };
+      } else {
+        result = getSubmissionsData();
+      }
+      break;
     default:
       result = { error: 'Unknown action' };
   }
