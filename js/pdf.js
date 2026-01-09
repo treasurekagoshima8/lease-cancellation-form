@@ -3,8 +3,8 @@
  * Recreates the original lease cancellation form layout
  */
 
-// Load Japanese font (will be loaded from CDN)
-const FONT_URL = 'https://cdn.jsdelivr.net/npm/@aspect-apps/noto-sans-jp-webfont@1.0.0/fonts/NotoSansJP-Regular.min.woff';
+// Load Japanese font (TTF format required for jsPDF)
+const FONT_URL = 'https://cdn.jsdelivr.net/gh/nicholasadamou/japanese-font@main/fonts/NotoSansJP-Regular.ttf';
 
 let fontLoaded = false;
 let fontBase64 = null;
@@ -39,22 +39,29 @@ async function loadJapaneseFont() {
  * Generate PDF from form data
  */
 async function generatePDF(data) {
-    const { jsPDF } = window.jspdf;
-
-    // Load font first
     try {
-        await loadJapaneseFont();
-    } catch (error) {
-        alert('フォントの読み込みに失敗しました。');
-        return;
-    }
+        const { jsPDF } = window.jspdf;
 
-    // Create PDF (A4 size)
-    const doc = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
-    });
+        if (!jsPDF) {
+            alert('PDFライブラリが読み込まれていません。ページを再読み込みしてください。');
+            return;
+        }
+
+        // Load font first
+        try {
+            await loadJapaneseFont();
+        } catch (error) {
+            console.error('Font loading error:', error);
+            alert('フォントの読み込みに失敗しました。');
+            return;
+        }
+
+        // Create PDF (A4 size)
+        const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
 
     // Add Japanese font
     doc.addFileToVFS('NotoSansJP-Regular.ttf', fontBase64);
@@ -271,6 +278,10 @@ async function generatePDF(data) {
     // Save PDF
     const fileName = `解約申込書_${data.contractorName || '名前未入力'}_${formatDateForFileName(new Date())}.pdf`;
     doc.save(fileName);
+    } catch (error) {
+        console.error('PDF generation error:', error);
+        alert('PDFの生成に失敗しました: ' + error.message);
+    }
 }
 
 /**
