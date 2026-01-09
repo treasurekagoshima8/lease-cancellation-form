@@ -183,6 +183,23 @@
         </div>
     </div>
 
+    <!-- Submission Detail modal -->
+    <div id="detail-modal" class="modal" style="display: none;">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>申込詳細</h3>
+                <button type="button" class="btn btn-icon close-detail-modal">&times;</button>
+            </div>
+            <div id="detail-content" class="detail-content">
+                <!-- Content will be populated dynamically -->
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-primary" id="detail-pdf-btn">PDFダウンロード</button>
+                <button type="button" class="btn btn-secondary close-detail-modal">閉じる</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="js/api.js"></script>
     <script src="js/pdf.js"></script>

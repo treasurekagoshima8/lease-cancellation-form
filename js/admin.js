@@ -304,6 +304,10 @@ async function loadSubmissions() {
 
             const info = document.createElement('div');
             info.className = 'submission-info';
+            info.style.cursor = 'pointer';
+            info.addEventListener('click', function() {
+                showSubmissionDetail(submission);
+            });
 
             const name = document.createElement('div');
             name.className = 'name';
@@ -318,6 +322,17 @@ async function loadSubmissions() {
             info.appendChild(name);
             info.appendChild(details);
 
+            const btnGroup = document.createElement('div');
+            btnGroup.className = 'btn-group';
+
+            const detailBtn = document.createElement('button');
+            detailBtn.type = 'button';
+            detailBtn.className = 'btn btn-secondary';
+            detailBtn.textContent = '詳細';
+            detailBtn.addEventListener('click', function() {
+                showSubmissionDetail(submission);
+            });
+
             const pdfBtn = document.createElement('button');
             pdfBtn.type = 'button';
             pdfBtn.className = 'btn btn-primary';
@@ -326,8 +341,11 @@ async function loadSubmissions() {
                 generatePDF(submission);
             });
 
+            btnGroup.appendChild(detailBtn);
+            btnGroup.appendChild(pdfBtn);
+
             item.appendChild(info);
-            item.appendChild(pdfBtn);
+            item.appendChild(btnGroup);
             container.appendChild(item);
         });
     } catch (error) {
@@ -335,3 +353,198 @@ async function loadSubmissions() {
         container.innerHTML = '<p class="no-data-text">データの読み込みに失敗しました</p>';
     }
 }
+
+// Store current submission for PDF download from detail modal
+let currentDetailSubmission = null;
+
+/**
+ * Show submission detail modal
+ */
+function showSubmissionDetail(submission) {
+    currentDetailSubmission = submission;
+    const modal = document.getElementById('detail-modal');
+    const content = document.getElementById('detail-content');
+
+    // Format inspection time if needed
+    let inspectionTimeDisplay = '';
+    if (submission.inspectionTime) {
+        const timeVal = String(submission.inspectionTime);
+        const excelDateMatch = timeVal.match(/^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}\s+(\d{1,2}:\d{2})/);
+        if (excelDateMatch) {
+            const timeParts = excelDateMatch[1].split(':');
+            const hour = parseInt(timeParts[0], 10);
+            const minute = timeParts[1];
+            inspectionTimeDisplay = `${hour}時${minute}分`;
+        } else if (!/^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}$/.test(timeVal) && timeVal.trim()) {
+            inspectionTimeDisplay = timeVal;
+        }
+    }
+
+    content.innerHTML = `
+        <div class="detail-section">
+            <h4>貸主・借主情報</h4>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <span class="detail-label">貸主住所</span>
+                    <span class="detail-value">${submission.landlordAddress || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">貸主氏名</span>
+                    <span class="detail-value">${submission.landlordName || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">借主住所</span>
+                    <span class="detail-value">${submission.tenantAddress || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">借主氏名</span>
+                    <span class="detail-value">${submission.tenantName || '-'}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h4>解約申込物件</h4>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <span class="detail-label">物件名</span>
+                    <span class="detail-value">${submission.propertyName || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">所在地</span>
+                    <span class="detail-value">${submission.propertyAddress || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">部屋番号</span>
+                    <span class="detail-value">${submission.roomNumber || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">駐車番号</span>
+                    <span class="detail-value">${submission.parkingNumber || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">契約者氏名</span>
+                    <span class="detail-value">${submission.contractorName || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">解約申込日</span>
+                    <span class="detail-value">${submission.applicationDate || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">解約希望日</span>
+                    <span class="detail-value">${submission.cancellationDate || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">立会希望日</span>
+                    <span class="detail-value">${submission.inspectionDate || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">立会希望時間</span>
+                    <span class="detail-value">${inspectionTimeDisplay || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">解約事由</span>
+                    <span class="detail-value">${submission.cancelReasonDisplay || '-'}</span>
+                </div>
+                <div class="detail-item full-width">
+                    <span class="detail-label">備考</span>
+                    <span class="detail-value">${submission.remarks || '-'}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h4>精算金振込み口座</h4>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <span class="detail-label">金融機関名</span>
+                    <span class="detail-value">${submission.bankName || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">金融機関種別</span>
+                    <span class="detail-value">${submission.bankType || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">支店名</span>
+                    <span class="detail-value">${submission.branchName || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">口座種別</span>
+                    <span class="detail-value">${submission.accountType || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">口座番号</span>
+                    <span class="detail-value">${submission.accountNumber || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">口座名義（カナ）</span>
+                    <span class="detail-value">${submission.accountHolderKana || '-'}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h4>転居先住所</h4>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <span class="detail-label">郵便番号</span>
+                    <span class="detail-value">${submission.newPostalCode || '-'}</span>
+                </div>
+                <div class="detail-item full-width">
+                    <span class="detail-label">住所</span>
+                    <span class="detail-value">${submission.newAddress || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">送付先氏名</span>
+                    <span class="detail-value">${submission.recipientName || '-'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">電話番号</span>
+                    <span class="detail-value">${submission.phoneNumber || '-'} ${submission.phoneTypeDisplay || ''}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">携帯電話</span>
+                    <span class="detail-value">${submission.mobileNumber || '-'} ${submission.mobileOwnerDisplay ? '(' + submission.mobileOwnerDisplay + ')' : ''}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <div class="detail-item">
+                <span class="detail-label">申込日時</span>
+                <span class="detail-value">${submission.submittedAt || '-'}</span>
+            </div>
+        </div>
+    `;
+
+    modal.style.display = 'flex';
+}
+
+// Initialize detail modal event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    const detailModal = document.getElementById('detail-modal');
+    const detailPdfBtn = document.getElementById('detail-pdf-btn');
+
+    // Close detail modal buttons
+    document.querySelectorAll('.close-detail-modal').forEach(btn => {
+        btn.addEventListener('click', function() {
+            detailModal.style.display = 'none';
+            currentDetailSubmission = null;
+        });
+    });
+
+    // Close on backdrop click
+    detailModal.addEventListener('click', function(e) {
+        if (e.target === detailModal) {
+            detailModal.style.display = 'none';
+            currentDetailSubmission = null;
+        }
+    });
+
+    // PDF download from detail modal
+    detailPdfBtn.addEventListener('click', function() {
+        if (currentDetailSubmission) {
+            generatePDF(currentDetailSubmission);
+        }
+    });
+});
