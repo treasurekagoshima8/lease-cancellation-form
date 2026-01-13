@@ -10,7 +10,7 @@
  */
 
 // Replace with your Google Apps Script Web App URL
-const API_URL = 'https://script.google.com/macros/s/AKfycbycdM9jRNurYWKWnDJLY-_BHQEIi62MvQ4hbKDxqoPSmAdMlEKGh3PGHZrYP8yP9nrhzQ/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwjwWFcCWP6BoDb-8Ixy6Amv5Zr5fpxx_wDBCNx45dgRFjLRroidafhVAp22w11nFhkRw/exec';
 
 /**
  * Submit form data to Google Spreadsheet
