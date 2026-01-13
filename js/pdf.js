@@ -129,19 +129,11 @@ async function generatePDF(data) {
     doc.text('【賃貸借契約解約申込書】', pageWidth / 2, y + 10, { align: 'center' });
     y += 25;
 
-    // Landlord info (top left)
+    // Tenant info
     doc.setFontSize(10);
-    doc.text(`（貸主住所）　${data.landlordAddress || ''}`, margin, y);
+    doc.text(`（借主住所）　${data.tenantAddress || ''}`, margin, y);
     y += 6;
-    doc.text(`（氏名）　　　${data.landlordName || ''}`, margin, y);
-    y += 12;
-
-    // Tenant info (right side)
-    const tenantX = pageWidth / 2 + 10;
-    doc.text(`（借主住所）　${data.tenantAddress || ''}`, tenantX, y - 6);
-    y += 6;
-    doc.text(`（氏名）　　　${data.tenantName || ''}`, tenantX, y - 6);
-    doc.text('印', pageWidth - margin - 5, y - 6);
+    doc.text(`（氏名）　　　${data.tenantName || ''}`, margin, y);
     y += 10;
 
     // Agreement text
