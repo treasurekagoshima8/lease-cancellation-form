@@ -369,9 +369,9 @@ function drawTableRow(doc, x, y, cells, height) {
         }
 
         // Draw text
-        if (cell.text) {
+        if (cell.text !== undefined && cell.text !== null) {
             const textY = y + height / 2 + 1;
-            doc.text(cell.text, currentX + 2, textY);
+            doc.text(String(cell.text), currentX + 2, textY);
         }
 
         currentX += cell.width;
