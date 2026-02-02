@@ -226,7 +226,68 @@ function submitForm(data) {
 
   sheet.appendRow(row);
 
+  // Send email notification
+  try {
+    sendNotificationEmail(data, jstDate);
+  } catch (emailError) {
+    Logger.log('Email notification failed: ' + emailError.message);
+  }
+
   return { success: true };
+}
+
+/**
+ * Send email notification for new submission
+ */
+function sendNotificationEmail(data, submittedAt) {
+  const notificationEmail = getSettingValue('notificationEmail');
+  if (!notificationEmail) return;
+
+  const contractorName = data.contractorName || '（未入力）';
+  const propertyName = data.propertyName || '（未入力）';
+  const roomNumber = data.roomNumber || '';
+  const cancellationDate = data.cancellationDate || '（未入力）';
+  const cancelReason = data.cancelReasonDisplay || data.cancelReason || '（未入力）';
+
+  const subject = '【解約申込】' + propertyName + (roomNumber ? ' ' + roomNumber + '号室' : '') + ' - ' + contractorName;
+
+  const body = [
+    '解約の申込がありました。',
+    '',
+    '━━━━━━━━━━━━━━━━━━━━',
+    '■ 申込日時: ' + submittedAt,
+    '■ 契約者氏名: ' + contractorName,
+    '■ 物件名: ' + propertyName,
+    '■ 部屋番号: ' + (roomNumber || '（なし）'),
+    '■ 解約希望日: ' + cancellationDate,
+    '■ 解約事由: ' + cancelReason,
+    '━━━━━━━━━━━━━━━━━━━━',
+    '',
+    '詳細は管理画面からご確認ください。'
+  ].join('\n');
+
+  MailApp.sendEmail({
+    to: notificationEmail,
+    subject: subject,
+    body: body
+  });
+}
+
+/**
+ * Get a single setting value from settings sheet
+ */
+function getSettingValue(key) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SETTINGS_SHEET);
+  if (!sheet) return null;
+
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === key) {
+      return data[i][1] || null;
+    }
+  }
+  return null;
 }
 
 /**

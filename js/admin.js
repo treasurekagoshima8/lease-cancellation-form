@@ -185,6 +185,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
+        // Notification email
+        const notificationEmailInput = document.getElementById('notification-email');
+        if (notificationEmailInput) {
+            notificationEmailInput.value = settings.notificationEmail || '';
+        }
+
         // Cancel reasons
         const cancelReasonsList = document.getElementById('cancel-reasons-list');
         cancelReasonsList.innerHTML = '';
@@ -218,7 +224,8 @@ document.addEventListener('DOMContentLoaded', function() {
             fieldVisibility: {},
             cancelReasons: [],
             phoneTypes: [],
-            mobileOwners: []
+            mobileOwners: [],
+            notificationEmail: document.getElementById('notification-email').value.trim()
         };
 
         // Field visibility

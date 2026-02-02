@@ -138,6 +138,17 @@
                     <button type="button" class="btn btn-secondary btn-add" id="add-mobile-owner">+ 追加</button>
                 </section>
 
+                <!-- Notification Email -->
+                <section class="form-section">
+                    <h2>メール通知</h2>
+                    <p class="note">解約申込があった際に通知メールを送信します。空欄にすると通知は無効になります。</p>
+
+                    <div class="form-group">
+                        <label for="notification-email">通知先メールアドレス</label>
+                        <input type="email" id="notification-email" name="notificationEmail" placeholder="example@gmail.com">
+                    </div>
+                </section>
+
                 <!-- Save Button (Full Width) -->
                 <div class="form-actions admin-full-width" style="border-top: none; padding-top: 0;">
                     <button type="submit" class="btn btn-primary" id="save-settings-btn" style="max-width: 300px;">設定を保存</button>
