@@ -14,6 +14,9 @@
  * 10. Paste the URL in js/api.js
  */
 
+// 管理画面のURL（通知メールのリンク先）
+const ADMIN_URL = 'https://treasurekagoshima8.github.io/lease-cancellation-form/admin.html';
+
 // Sheet names
 const SUBMISSIONS_SHEET = '申込データ';
 const SETTINGS_SHEET = '設定';
@@ -251,26 +254,70 @@ function sendNotificationEmail(data, submittedAt) {
 
   const subject = '【解約申込】' + propertyName + (roomNumber ? ' ' + roomNumber + '号室' : '') + ' - ' + contractorName;
 
+  const items = [
+    ['申込日時', submittedAt],
+    ['契約者氏名', contractorName],
+    ['物件名', propertyName],
+    ['部屋番号', roomNumber || '（なし）'],
+    ['解約希望日', cancellationDate],
+    ['解約事由', cancelReason]
+  ];
+
+  // Plain text version (for mail clients that do not render HTML)
   const body = [
     '解約の申込がありました。',
     '',
-    '━━━━━━━━━━━━━━━━━━━━',
-    '■ 申込日時: ' + submittedAt,
-    '■ 契約者氏名: ' + contractorName,
-    '■ 物件名: ' + propertyName,
-    '■ 部屋番号: ' + (roomNumber || '（なし）'),
-    '■ 解約希望日: ' + cancellationDate,
-    '■ 解約事由: ' + cancelReason,
+    '━━━━━━━━━━━━━━━━━━━━'
+  ].concat(items.map(function (item) {
+    return '■ ' + item[0] + ': ' + item[1];
+  })).concat([
     '━━━━━━━━━━━━━━━━━━━━',
     '',
-    '詳細は管理画面からご確認ください。'
-  ].join('\n');
+    '詳細は管理画面からご確認ください。',
+    '管理画面: ' + ADMIN_URL
+  ]).join('\n');
+
+  // HTML version (clickable link and button)
+  const rowsHtml = items.map(function (item) {
+    return '<tr>' +
+      '<td style="padding:6px 16px 6px 0;color:#666;white-space:nowrap;vertical-align:top;">' + escapeHtml(item[0]) + '</td>' +
+      '<td style="padding:6px 0;color:#222;vertical-align:top;">' + escapeHtml(item[1]) + '</td>' +
+      '</tr>';
+  }).join('');
+
+  const htmlBody =
+    '<div style="font-family:-apple-system,BlinkMacSystemFont,\'Hiragino Sans\',\'Meiryo\',sans-serif;font-size:14px;line-height:1.6;color:#222;">' +
+      '<p style="margin:0 0 16px;">解約の申込がありました。</p>' +
+      '<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;border-top:1px solid #ddd;border-bottom:1px solid #ddd;margin:0 0 24px;">' +
+        rowsHtml +
+      '</table>' +
+      '<p style="margin:0 0 24px;">' +
+        '<a href="' + ADMIN_URL + '" style="display:inline-block;padding:12px 28px;background:#1a56db;color:#ffffff;text-decoration:none;border-radius:4px;font-weight:bold;">管理画面を開く</a>' +
+      '</p>' +
+      '<p style="margin:0;">詳細は<a href="' + ADMIN_URL + '" style="color:#1a56db;">管理画面</a>からご確認ください。</p>' +
+      '<p style="margin:8px 0 0;font-size:12px;color:#888;">ボタンが押せない場合は次のURLをブラウザに貼り付けてください。<br>' +
+        '<a href="' + ADMIN_URL + '" style="color:#888;">' + ADMIN_URL + '</a>' +
+      '</p>' +
+    '</div>';
 
   MailApp.sendEmail({
     to: notificationEmail,
     subject: subject,
-    body: body
+    body: body,
+    htmlBody: htmlBody
   });
+}
+
+/**
+ * Escape a value for safe embedding in HTML
+ */
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 /**
